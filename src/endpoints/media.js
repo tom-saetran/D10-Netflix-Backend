@@ -3,10 +3,12 @@ import express from "express"
 import { pipeline } from "stream"
 import createError from "http-errors"
 import { v2 as cloudinary } from "cloudinary"
-import { filter, del } from "../handlers/streamUtils.js"
+import generatePDFStream from "../handlers/pdfout.js"
 import { readMediaStream } from "../handlers/files.js"
-import { mediaValidator, reviewValidator } from "../handlers/validators.js"
+import { filter, del } from "../handlers/streamUtils.js"
 import { CloudinaryStorage } from "multer-storage-cloudinary"
+import { mediaValidator, reviewValidator } from "../handlers/validators.js"
+import { validationResult } from "express-validator"
 
 const mediaRouter = express.Router()
 
@@ -44,7 +46,14 @@ mediaRouter.get("/:id", (req, res, next) => {
 //Post new media
 mediaRouter.post("/", mediaValidator, async (req, res, next) => {
     try {
-        res.status(201).send("Created")
+        const errors = validationResult(req)
+        console.log(errors)
+        if (errors.isEmpty()) {
+            // Save to json ehre
+            res.status(201).send("Created")
+        } else {
+            next(createError(400, errors.errors))
+        }
     } catch (error) {
         next(error)
     }

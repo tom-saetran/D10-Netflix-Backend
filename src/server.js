@@ -5,9 +5,9 @@ import express from "express"
 import createError from "http-errors"
 import listEndpoints from "express-list-endpoints"
 
+import mediaRouter from "./endpoints/media.js"
 import { loggerJSON } from "./handlers/files.js"
 import { errorBadRequest, errorForbidden, errorNotFound, errorDefault } from "./handlers/errors.js"
-import mediaRouter from "./endpoints/media.js"
 
 const server = express()
 const port = process.env.PORT || 1234
