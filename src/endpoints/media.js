@@ -32,9 +32,7 @@ mediaRouter.get("/:id", (req, res, next) => {
     try {
         pipeline(
             readMediaStream(),
-            filter(media => media._id === req.params._id),
-            filter(media => (req.query.rate ? media.rate === req.query.rate : media)),
-            filter(media => (req.query.elementId ? media.elementId === req.query.elementId : media)),
+            filter(media => media._id === req.params.id),
             res,
             error => (error ? createError(500, error) : null)
         )
@@ -70,7 +68,6 @@ mediaRouter.delete("/:id", async (req, res, next) => {
             res,
             error => (error ? createError(500, error) : null)
         )
-        //res.status(406).send("Deleted")
     } catch (error) {
         next(error)
     }
